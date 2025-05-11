@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Verbuga-stijl Oefenen</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 40px; background: #f5f5f5; }
+    h1 { color: #333; }
+    select, input[type=text] { padding: 6px; font-size: 16px; }
+    button { padding: 6px 12px; font-size: 16px; margin-top: 10px; }
+    .result { margin-top: 15px; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>Oefen Franse werkwoorden (Verbuga-stijl)</h1>
+  
+  <label for="verb">Werkwoord:</label>
+  <select id="verb">
+    <option value="appartenir">appartenir</option>
+    <option value="apprendre">apprendre</option>
+    <option value="atteindre">atteindre</option>
+    <option value="connaitre">connaître</option>
+    <option value="croire">croire</option>
+  </select><br><br>
+
+  <label for="tense">Tijd:</label>
+  <select id="tense">
+    <option value="present">indicatif présent</option>
+    <option value="imparfait">imparfait</option>
+    <option value="passeCompose">passé composé</option>
+    <option value="futur">futur simple</option>
+    <option value="subjonctif">subjonctif présent</option>
+    <option value="conditionnel">conditionnel présent</option>
+    <option value="imperatif">impératif présent</option>
+  </select><br><br>
+
+  <label for="pronoun">Persoon (bijv. je, tu, il...):</label>
+  <input type="text" id="pronoun" placeholder="bv. je"><br><br>
+
+  <label for="conjugation">Jouw vervoeging:</label>
+  <input type="text" id="conjugation"><br>
+  
+  <button onclick="checkAnswer()">Controleer</button>
+
+  <div class="result" id="result"></div>
+
+  <script>
+    const conjugations = {
+      appartenir: {
+        present: { je: "appartiens", tu: "appartiens", il: "appartient", nous: "appartenons", vous: "appartenez", ils: "appartiennent" },
+        imparfait: { je: "appartenais", tu: "appartenais", il: "appartenait", nous: "appartenions", vous: "apparteniez", ils: "appartenaient" },
+        passeCompose: { je: "ai appartenu", tu: "as appartenu", il: "a appartenu", nous: "avons appartenu", vous: "avez appartenu", ils: "ont appartenu" },
+        futur: { je: "appartiendrai", tu: "appartiendras", il: "appartiendra", nous: "appartiendrons", vous: "appartiendrez", ils: "appartiendront" },
+        subjonctif: { je: "appartienne", tu: "appartiennes", il: "appartienne", nous: "appartenions", vous: "apparteniez", ils: "appartiennent" },
+        conditionnel: { je: "appartiendrais", tu: "appartiendrais", il: "appartiendrait", nous: "appartiendrions", vous: "appartiendriez", ils: "appartiendraient" },
+        imperatif: { tu: "appartiens", nous: "appartenons", vous: "appartenez" }
+      },
+      apprendre: {
+        present: { je: "apprends", tu: "apprends", il: "apprend", nous: "apprenons", vous: "apprenez", ils: "apprennent" },
+        imparfait: { je: "apprenais", tu: "apprenais", il: "apprenait", nous: "apprenions", vous: "appreniez", ils: "apprenaient" },
+        passeCompose: { je: "ai appris", tu: "as appris", il: "a appris", nous: "avons appris", vous: "avez appris", ils: "ont appris" },
+        futur: { je: "apprendrai", tu: "apprendras", il: "apprendra", nous: "apprendrons", vous: "apprendrez", ils: "apprendront" },
+        subjonctif: { je: "apprenne", tu: "apprennes", il: "apprenne", nous: "apprenions", vous: "appreniez", ils: "apprennent" },
+        conditionnel: { je: "apprendrais", tu: "apprendrais", il: "apprendrait", nous: "apprendrions", vous: "apprendriez", ils: "apprendraient" },
+        imperatif: { tu: "apprends", nous: "apprenons", vous: "apprenez" }
+      },
+      atteindre: {
+        present: { je: "atteins", tu: "atteins", il: "atteint", nous: "atteignons", vous: "atteignez", ils: "atteignent" },
+        imparfait: { je: "atteignais", tu: "atteignais", il: "atteignait", nous: "atteignions", vous: "atteigniez", ils: "atteignaient" },
+        passeCompose: { je: "ai atteint", tu: "as atteint", il: "a atteint", nous: "avons atteint", vous: "avez atteint", ils: "ont atteint" },
+        futur: { je: "atteindrai", tu: "atteindras", il: "atteindra", nous: "atteindrons", vous: "atteindrez", ils: "atteindront" },
+        subjonctif: { je: "atteigne", tu: "atteignes", il: "atteigne", nous: "atteignions", vous: "atteigniez", ils: "atteignent" },
+        conditionnel: { je: "atteindrais", tu: "atteindrais", il: "atteindrait", nous: "atteindrions", vous: "atteindriez", ils: "atteindraient" },
+        imperatif: { tu: "atteins", nous: "atteignons", vous: "atteignez" }
+      },
+      connaitre: {
+        present: { je: "connais", tu: "connais", il: "connait", nous: "connaissons", vous: "connaissez", ils: "connaissent" },
+        imparfait: { je: "connaissais", tu: "connaissais", il: "connaissait", nous: "connaissions", vous: "connaissiez", ils: "connaissaient" },
+        passeCompose: { je: "ai connu", tu: "as connu", il: "a connu", nous: "avons connu", vous: "avez connu", ils: "ont connu" },
+        futur: { je: "connaitrai", tu: "connaitras", il: "connaitra", nous: "connaitrons", vous: "connaitrez", ils: "connaitront" },
+        subjonctif: { je: "connaisse", tu: "connaisses", il: "connaisse", nous: "connaissions", vous: "connaissiez", ils: "connaissent" },
+        conditionnel: { je: "connaitrais", tu: "connaitrais", il: "connaitrait", nous: "connaitrions", vous: "connaitriez", ils: "connaitraient" },
+        imperatif: { tu: "connais", nous: "connaissons", vous: "connaissez" }
+      },
+      croire: {
+        present: { je: "crois", tu: "crois", il: "croit", nous: "croyons", vous: "croyez", ils: "croient" },
+        imparfait: { je: "croyais", tu: "croyais", il: "croyait", nous: "croyions", vous: "croyiez", ils: "croyaient" },
+        passeCompose: { je: "ai cru", tu: "as cru", il: "a cru", nous: "avons cru", vous: "avez cru", ils: "ont cru" },
+        futur: { je: "croirai", tu: "croiras", il: "croira", nous: "croirons", vous: "croirez", ils: "croiront" },
+        subjonctif: { je: "croie", tu: "croies", il: "croie", nous: "croyions", vous: "croyiez", ils: "croient" },
+        conditionnel: { je: "croirais", tu: "croirais", il: "croirait", nous: "croirions", vous: "croiriez", ils: "croiraient" },
+        imperatif: { tu: "crois", nous: "croyons", vous: "croyez" }
+      }
+    };
+
+    function checkAnswer() {
+      const verb = document.getElementById('verb').value;
+      const tense = document.getElementById('tense').value;
+      const pronoun = document.getElementById('pronoun').value.trim().toLowerCase();
+      const answer = document.getElementById('conjugation').value.trim();
+
+      const correct = conjugations[verb]?.[tense]?.[pronoun];
+      const resultDiv = document.getElementById('result');
+
+      if (!correct) {
+        resultDiv.textContent = "Onbekende combinatie of onderwerp. Probeer opnieuw.";
+        resultDiv.style.color = "orange";
+      } else if (answer === correct) {
+        resultDiv.textContent = "✅ Correct!";
+        resultDiv.style.color = "green";
+      } else {
+        resultDiv.textContent = `❌ Fout. Het juiste antwoord is: "${correct}".`;
+        resultDiv.style.color = "red";
+      }
+    }
+  </script>
+</body>
+</html>
